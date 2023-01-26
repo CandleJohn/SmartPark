@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "576213863847",
+    "firebase_url": "https://smartpark-4fb2b-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "smartpark-4fb2b",
+    "storage_bucket": "smartpark-4fb2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576213863847:android:b966357d15ccfccc6bfa82",
+        "android_client_info": {
+          "package_name": "com.mad1.smartpark"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "576213863847-b83sgfn8idocjiubef3liecnog8gcba9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmoE82OSf__FQfcaimhP9alEebJAcPH5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576213863847-b83sgfn8idocjiubef3liecnog8gcba9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
