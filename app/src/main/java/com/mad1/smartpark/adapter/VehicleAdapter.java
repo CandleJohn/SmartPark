@@ -1,4 +1,4 @@
-package com.mad1.smartpark;
+package com.mad1.smartpark.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.mad1.smartpark.R;
+import com.mad1.smartpark.activity.UpdateVehicle;
+import com.mad1.smartpark.interfaces.ExpressInterface;
+import com.mad1.smartpark.model.Vehicle;
+
 import java.util.List;
-import java.util.concurrent.RecursiveAction;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,8 +29,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
     Context context;
     List<Vehicle> list;
-
-
 
     public VehicleAdapter(Context context){
         this.context = context;
@@ -90,7 +91,7 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.VehicleV
 
                     @Override
                     public void onFailure(Call<Vehicle> call, Throwable t) {
-                        Log.d("HERRRERERERERER", t.toString());
+                        Log.d("Error: ", t.toString());
                     }
                 });
             });

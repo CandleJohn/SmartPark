@@ -1,18 +1,26 @@
-package com.mad1.smartpark;
+package com.mad1.smartpark.activity;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
+import com.mad1.smartpark.R;
+import com.mad1.smartpark.interfaces.ExpressInterface;
+import com.mad1.smartpark.model.Vehicle;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,6 +29,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UpdateVehicle extends AppCompatActivity {
+
+    public DrawerLayout drawerLayout;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
 
     EditText registrationEditText, colourEditText, brandEditText, modelEditText;
     TextView vehicleFormTextView;
@@ -33,31 +44,56 @@ public class UpdateVehicle extends AppCompatActivity {
             .build();
     ExpressInterface api = retrofit.create(ExpressInterface.class);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.main_menu,menu);
-        return true;
+    public void initNavigationDrawer() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_vehicles:
+                        startActivity(new Intent(UpdateVehicle.this, MyVehicles.class));
+                        break;
+                    case R.id.action_spaces:
+                        startActivity(new Intent(UpdateVehicle.this, SpaceAvailability.class));
+                        break;
+                    case R.id.action_update_driver:
+                        startActivity(new Intent(UpdateVehicle.this, UpdateDriver.class));
+                        break;
+                    case R.id.action_bookings:
+                        startActivity(new Intent(UpdateVehicle.this, DriverBookings.class));
+                        break;
+                    case R.id.action_logout:
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.clear();
+                        editor.apply();
+                        startActivity(new Intent(UpdateVehicle.this, MainActivity.class));
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_vehicles:
-                startActivity(new Intent(UpdateVehicle.this, MyVehicles.class));
-                return true;
-            case R.id.action_spaces:
-                startActivity(new Intent(UpdateVehicle.this, SpaceAvailability.class));
-            default:
-                return super.onOptionsItemSelected(item);
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_vehicle);
+        initNavigationDrawer();
+        drawerLayout = findViewById(R.id.drawer_layout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sharedPref = getSharedPreferences("sharedValues", Context.MODE_PRIVATE);
         driver_id = sharedPref.getInt("driver_id", 0);
@@ -95,7 +131,7 @@ public class UpdateVehicle extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Vehicle> call, Throwable t) {
-                Log.d("HERERERERER", "errer", t);
+                Toast.makeText(UpdateVehicle.this,"Connection Error", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -108,12 +144,12 @@ public class UpdateVehicle extends AppCompatActivity {
         call.enqueue(new Callback<Vehicle>() {
             @Override
             public void onResponse(Call<Vehicle> call, Response<Vehicle> response) {
-
+                Toast.makeText(UpdateVehicle.this, "Vehicle Updated", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call<Vehicle> call, Throwable t) {
-
+                Toast.makeText(UpdateVehicle.this, "Update failed. Check connection", Toast.LENGTH_SHORT).show();
             }
         });
 

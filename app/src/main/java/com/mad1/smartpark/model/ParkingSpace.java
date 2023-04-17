@@ -1,4 +1,4 @@
-package com.mad1.smartpark;
+package com.mad1.smartpark.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 

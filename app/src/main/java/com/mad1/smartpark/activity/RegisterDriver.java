@@ -1,18 +1,24 @@
-package com.mad1.smartpark;
+package com.mad1.smartpark.activity;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.nio.charset.StandardCharsets;
+import com.google.android.material.navigation.NavigationView;
+import com.mad1.smartpark.R;
+import com.mad1.smartpark.interfaces.ExpressInterface;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,6 +27,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterDriver extends AppCompatActivity {
+
+    public DrawerLayout drawerLayout;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
 
     EditText firstNameEditText, lastNameEditText, emailEditText, phoneEditText,
             passwordEditText, passConfirmEditText;
@@ -32,11 +41,56 @@ public class RegisterDriver extends AppCompatActivity {
             .build();
     ExpressInterface api = retrofit.create(ExpressInterface.class);
 
+    public void initNavigationDrawer() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_vehicles:
+                        startActivity(new Intent(RegisterDriver.this, MyVehicles.class));
+                        break;
+                    case R.id.action_spaces:
+                        startActivity(new Intent(RegisterDriver.this, SpaceAvailability.class));
+                        break;
+                    case R.id.action_update_driver:
+                        startActivity(new Intent(RegisterDriver.this, UpdateDriver.class));
+                        break;
+                    case R.id.action_bookings:
+                        startActivity(new Intent(RegisterDriver.this, DriverBookings.class));
+                        break;
+                    case R.id.action_logout:
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.clear();
+                        editor.apply();
+                        startActivity(new Intent(RegisterDriver.this, MainActivity.class));
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_driver);
+        initNavigationDrawer();
+        drawerLayout = findViewById(R.id.drawer_layout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
 
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         sharedPref = getSharedPreferences("sharedValues", Context.MODE_PRIVATE);
 
         firstNameEditText = findViewById(R.id.firstNameEditText);
@@ -81,7 +135,7 @@ public class RegisterDriver extends AppCompatActivity {
                 editor.putString("phone", phone);
                 editor.putString("password", password);
                 editor.apply();
-                Toast.makeText(RegisterDriver.this, "Registered now add a vehicle" + id, Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterDriver.this, "Registered now add a vehicle", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(RegisterDriver.this, MyVehicles.class));
             }
 

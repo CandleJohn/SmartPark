@@ -1,4 +1,8 @@
-package com.mad1.smartpark;
+package com.mad1.smartpark.interfaces;
+
+import com.mad1.smartpark.model.Booking;
+import com.mad1.smartpark.model.Driver;
+import com.mad1.smartpark.model.Vehicle;
 
 import java.util.List;
 
@@ -19,6 +23,10 @@ public interface ExpressInterface {
                               @Query("email") String email, @Query("phone")String phone,
                               @Query("password")String password);
 
+    @POST("updateUser")
+    Call<Driver> updateDriver(@Query("driver_id") int driverId, @Query("firstName") String fName, @Query("lastName") String lName,
+                        @Query("email") String email, @Query("phone") String phone);
+
     @POST("addVehicle")
     Call<Vehicle> addVehicle(@Query("registration") String registration,
                              @Query("colour") String colour, @Query("model") String model,
@@ -38,5 +46,8 @@ public interface ExpressInterface {
                                 @Query("registration") String registration,
                                 @Query("colour") String colour, @Query("model") String model,
                                 @Query("brand") String brand);
+
+    @POST("driverBookings")
+    Call<List<Booking>> getBookings(@Query("driver_id") int driverId);
 
 }
